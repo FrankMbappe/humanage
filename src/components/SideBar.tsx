@@ -9,22 +9,20 @@ type ListItem = {
   name: string;
 };
 
+const selectableStyle = {
+  cursor: "pointer",
+  _hover: {
+    bgColor: "gray.100",
+    transition: "150ms ease-in-out",
+  },
+  _pressed: {
+    bgColor: "gray.300",
+  },
+};
+
 const Item = ({ item }: { item: ListItem }) => {
   return (
-    <Flex
-      px={4}
-      py={3}
-      align="center"
-      borderRadius={8}
-      cursor="pointer"
-      _hover={{
-        bgColor: "gray.100",
-        transition: "150ms ease-in-out",
-      }}
-      _pressed={{
-        bgColor: "gray.300",
-      }}
-    >
+    <Flex px={4} py={3} align="center" borderRadius={8} {...selectableStyle}>
       <Icon as={item.icon} color="gray.500" boxSize={6} />
       <Text ms={4} letterSpacing={1}>
         {item.name}
@@ -50,6 +48,8 @@ const SideBar = () => {
         alt="Logo"
         boxSize={32}
         p={4}
+        rounded="full"
+        {...selectableStyle}
       />
 
       <Stack mt={6} spacing={1}>

@@ -1,9 +1,11 @@
 import Head from "next/head";
 import { api } from "@/utils/api";
 import { Flex, Text } from "@chakra-ui/react";
-import SideBar from "@/components/SideBar";
+import { type NextPageWithLayout } from "./_app";
+import { type ReactElement } from "react";
+import HomeLayout from "@/components/layout/HomeLayout";
 
-export default function Home() {
+const Home: NextPageWithLayout = () => {
   const hello = api.example.hello.useQuery({ text: "from tRPC" });
 
   return (
@@ -14,16 +16,17 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex minH="100vh" justify="center">
-        <Flex maxW="container.xl" flex="1" borderWidth={1} borderColor="red">
-          <SideBar />
-          <Flex flex="1" bg="gray">
-            <Text>
-              {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-            </Text>
-          </Flex>
-        </Flex>
+      <Flex flex={1} bg="red">
+        <Text>
+          {hello.data ? hello.data.greeting : "Loading tRPC query..."}
+        </Text>
       </Flex>
     </>
   );
-}
+};
+
+Home.getLayout = (page: ReactElement) => {
+  return <HomeLayout>{page}</HomeLayout>;
+};
+
+export default Home;
