@@ -1,8 +1,12 @@
 import { type Session } from "next-auth";
 import { SessionProvider } from "next-auth/react";
+import { ChakraProvider } from "@chakra-ui/react";
 import { type AppType } from "next/app";
 import { api } from "@/utils/api";
+import { Noto_Sans } from "next/font/google";
 import "@/styles/globals.css";
+
+const notoSans = Noto_Sans({ subsets: ["latin"], weight: "400" });
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -10,7 +14,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <ChakraProvider>
+        <main className={notoSans.className}>
+          <Component {...pageProps} />
+        </main>
+      </ChakraProvider>
     </SessionProvider>
   );
 };
