@@ -1,9 +1,7 @@
 import Head from "next/head";
-import { api } from "@/utils/api";
 import { Flex, Text } from "@chakra-ui/react";
 
-const Home = () => {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+const Projects = () => {
   return (
     <>
       <Head>
@@ -13,12 +11,10 @@ const Home = () => {
       </Head>
 
       <Flex flex={1}>
-        <Text>
-          {hello.data ? hello.data.greeting : "Loading tRPC query..."}
-        </Text>
+        <Text>Projects</Text>
       </Flex>
     </>
   );
 };
 
-export default Home;
+export default Projects;

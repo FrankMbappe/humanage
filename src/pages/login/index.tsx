@@ -1,7 +1,8 @@
 import { signIn, signOut, useSession } from "next-auth/react";
 import { api } from "@/utils/api";
+import { type NextPageWithLayout } from "../_app";
 
-function Login() {
+const Login: NextPageWithLayout = () => {
   const { data: sessionData } = useSession();
 
   const { data: secretMessage } = api.example.getSecretMessage.useQuery(
@@ -23,6 +24,8 @@ function Login() {
       </button>
     </div>
   );
-}
+};
+
+Login.hasNoLayout = true;
 
 export default Login;

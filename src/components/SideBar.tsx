@@ -3,10 +3,14 @@ import { useMemo } from "react";
 import { type IconType } from "react-icons";
 import { PiBagBold, PiUsersFourBold } from "react-icons/pi";
 import { BiCog, BiLogOut } from "react-icons/bi";
+import { useRouter } from "next/router";
+import { RoutesEnum } from "./utils/enums";
 
 type ListItem = {
   icon: IconType;
   name: string;
+  to?: RoutesEnum;
+  onClick?: () => void;
 };
 
 const selectableStyle = {
@@ -19,13 +23,34 @@ const selectableStyle = {
     bgColor: "gray.300",
   },
 };
-
-const Item = ({ item }: { item: ListItem }) => {
+const Logo = () => {
+  const router = useRouter();
   return (
-    <Flex px={4} py={3} align="center" borderRadius={8} {...selectableStyle}>
-      <Icon as={item.icon} color="gray.500" boxSize={6} />
+    <Image
+      src="https://images.vexels.com/media/users/3/136638/isolated/preview/8794edc043ac61418c90043b1ed63f2b-purple-flower-icon.png"
+      alt="Logo"
+      boxSize={32}
+      p={4}
+      rounded="full"
+      {...selectableStyle}
+      onClick={() => void router.push(RoutesEnum.Home)}
+    />
+  );
+};
+const Item = ({ item: { icon, name, to, onClick } }: { item: ListItem }) => {
+  const router = useRouter();
+  return (
+    <Flex
+      px={4}
+      py={3}
+      align="center"
+      borderRadius={8}
+      {...selectableStyle}
+      onClick={to ? () => void router.push(to) : onClick}
+    >
+      <Icon as={icon} color="gray.500" boxSize={6} />
       <Text ms={4} letterSpacing={1}>
-        {item.name}
+        {name}
       </Text>
     </Flex>
   );
@@ -34,23 +59,16 @@ const Item = ({ item }: { item: ListItem }) => {
 const SideBar = () => {
   const items = useMemo<ListItem[]>(
     () => [
-      { name: "Employees", icon: PiUsersFourBold },
-      { name: "Projects", icon: PiBagBold },
-      { name: "Settings", icon: BiCog },
+      { name: "Employees", icon: PiUsersFourBold, to: RoutesEnum.Employees },
+      { name: "Projects", icon: PiBagBold, to: RoutesEnum.Projects },
+      { name: "Settings", icon: BiCog, to: RoutesEnum.Settings },
     ],
     []
   );
 
   return (
     <Flex direction="column" bg="white" w={60} p={3} borderRightWidth={2}>
-      <Image
-        src="https://images.vexels.com/media/users/3/136638/isolated/preview/8794edc043ac61418c90043b1ed63f2b-purple-flower-icon.png"
-        alt="Logo"
-        boxSize={32}
-        p={4}
-        rounded="full"
-        {...selectableStyle}
-      />
+      <Logo />
 
       <Stack mt={6} spacing={1}>
         {items.map((item) => (
@@ -64,6 +82,7 @@ const SideBar = () => {
         item={{
           name: "Log Out",
           icon: BiLogOut,
+          onClick: () => console.log("Log out"),
         }}
       />
     </Flex>

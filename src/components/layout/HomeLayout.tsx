@@ -5,12 +5,15 @@ import { type ReactNode } from "react";
 const HomeLayout = ({ children }: { children: ReactNode }) => {
   return (
     <Flex minH="100vh" justify="center">
-      <Flex maxW="container.xl" flex="1" borderWidth={1} borderColor="red">
+      <Flex
+        maxW="container.xl"
+        flex="1"
+        borderWidth={2}
+        borderColor="red"
+        borderStyle="dashed"
+      >
         <SideBar />
-
-        <Flex flex="1" bg="gray">
-          {children}
-        </Flex>
+        <Flex flex="1">{children}</Flex>
       </Flex>
     </Flex>
   );
