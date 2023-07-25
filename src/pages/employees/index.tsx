@@ -1,7 +1,80 @@
 import Head from "next/head";
-import { Flex, Text } from "@chakra-ui/react";
+import {
+  Avatar,
+  Button,
+  ButtonGroup,
+  Flex,
+  Heading,
+  Icon,
+  IconButton,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Text,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
+import { getPersonFullName } from "@/utils";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import { FiEdit, FiDelete, FiRefreshCcw } from "react-icons/fi";
+import { Personality } from "@prisma/client";
+import { api } from "@/utils/api";
+import { useSession } from "next-auth/react";
+import { useEffect } from "react";
+
+type Employee = {
+  id: string;
+  firstName: string;
+  lastName: string;
+  jobPosition: string;
+  personality: Personality;
+  createdAt: Date;
+  picUrl?: string;
+  bio?: string;
+};
+
+const employees: Employee[] = [
+  {
+    id: "billmanos",
+    firstName: "Bill",
+    lastName: "Manos",
+    jobPosition: "Salesman",
+    picUrl:
+      "https://media.licdn.com/dms/image/C4E03AQEM_M3tizFE5A/profile-displayphoto-shrink_800_800/0/1516157987454?e=1695859200&v=beta&t=2gA0vOK57IyIGBE9RTuGq7kFK6_TeSZJ-wSVw_jQgwg",
+    bio: "I am assisting entrepreneurs, corporate intrapreneurs, Computer Science Masters students and undergraduate business students achieve commercial success when introducing disruptive technologies. This is the most fulfilling activity in my career, allowing me to share and apply my 30+ years of international product and business development management experience, helping innovations come to life.",
+    personality: Personality.ENTJ,
+    createdAt: new Date("5/6/2023"),
+  },
+  {
+    id: "olivierberthet",
+    firstName: "Olivier",
+    lastName: "Berthet",
+    jobPosition: "Project Manager",
+    picUrl:
+      "https://media.licdn.com/dms/image/C5103AQG7DV0BwyJqoA/profile-displayphoto-shrink_800_800/0/1517607872116?e=1695859200&v=beta&t=p92-PAkLXN--wWS_AMw6We-Q6rRv_j32m3mc5gO_E2U",
+    bio: "International IT Manager with more than 20 years of experience acquired across industries with strong exposure to various sectors, with leadership, contract and commercial roles.",
+    personality: Personality.INTJ,
+    createdAt: new Date("6/7/2023"),
+  },
+];
 
 const Employees = () => {
+  const { data: sessionData } = useSession();
+
+  const {
+    data: employees,
+    refetch: refetchEmployees,
+    isLoading,
+    isError,
+  } = api.employee.getAll.useQuery(
+    undefined, // No input
+    {
+      enabled: sessionData?.user !== undefined,
+    }
+  );
+
   return (
     <>
       <Head>
@@ -10,8 +83,81 @@ const Employees = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex flex={1}>
-        <Text>Employees</Text>
+      <Flex direction="column" flex={1}>
+        <Flex direction="column">
+          <Heading>Employees</Heading>
+          <Text mt={2}>
+            Create, edit, and delete employees of your organization
+          </Text>
+        </Flex>
+
+        {isError ? (
+          <Text color="red">Something went wrong</Text>
+        ) : (
+          <Flex direction="column" mt={4}>
+            <Flex justify="space-between" align="center" flex={1}>
+              <Text fontWeight="bold">
+                {employees ? `${employees.length} record(s)` : "Loading..."}
+              </Text>
+              <ButtonGroup size="sm" isDisabled={isLoading || isError}>
+                <IconButton
+                  icon={<Icon as={FiRefreshCcw} />}
+                  aria-label="Refresh table"
+                  variant="outline"
+                  isLoading={isLoading}
+                  onClick={() => void refetchEmployees()}
+                />
+                <Button colorScheme="purple">New</Button>
+              </ButtonGroup>
+            </Flex>
+
+            <TableContainer mt={4}>
+              <Table variant="simple">
+                <Thead>
+                  <Tr>
+                    <Th>Name</Th>
+                    <Th>Job position</Th>
+                    <Th>Created</Th>
+                    <Th>Actions</Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {employees?.map((emp) => (
+                    <Tr key={emp.id}>
+                      <Td>
+                        <Flex align="center">
+                          <Avatar
+                            src={emp.picUrl ?? undefined}
+                            name={getPersonFullName(emp)}
+                          />
+                          <Text ms={4}>{getPersonFullName(emp)}</Text>
+                        </Flex>
+                      </Td>
+                      <Td>{emp.jobPosition}</Td>
+                      <Td>
+                        {formatDistanceToNow(emp.createdAt, {
+                          addSuffix: true,
+                        })}
+                      </Td>
+                      <Td>
+                        <ButtonGroup variant="outline" isAttached>
+                          <IconButton
+                            icon={<Icon as={FiEdit} />}
+                            aria-label="Edit"
+                          />
+                          <IconButton
+                            icon={<Icon as={FiDelete} />}
+                            aria-label="Delete"
+                          />
+                        </ButtonGroup>
+                      </Td>
+                    </Tr>
+                  ))}
+                </Tbody>
+              </Table>
+            </TableContainer>
+          </Flex>
+        )}
       </Flex>
     </>
   );

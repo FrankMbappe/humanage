@@ -48,13 +48,14 @@ model Session {
 }
 
 model User {
-    id            String    @id @default(cuid())
+    id            String     @id @default(cuid())
     name          String?
-    email         String?   @unique
+    email         String?    @unique
     emailVerified DateTime?
     image         String?
     accounts      Account[]
     sessions      Session[]
+    employees     Employee[]
 }
 
 model VerificationToken {
@@ -63,4 +64,37 @@ model VerificationToken {
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model Employee {
+    id          String      @id @default(cuid())
+    createdAt   DateTime    @default(now())
+    updatedAt   DateTime    @updatedAt
+    firstName   String
+    lastName    String
+    jobPosition String
+    picUrl      String?
+    bio         String?
+    personality Personality
+    userId      String
+    user        User        @relation(fields: [userId], references: [id])
+}
+
+enum Personality {
+    ESTP
+    ISFP
+    ISTP
+    ESFP
+    ESTJ
+    ESFJ
+    ISTJ
+    ISFJ
+    ENFJ
+    INFJ
+    ENFP
+    INFP
+    ENTJ
+    INTJ
+    ENTP
+    INTP
 }

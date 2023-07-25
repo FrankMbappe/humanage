@@ -13,7 +13,9 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
         borderStyle="dashed"
       >
         <SideBar />
-        <Flex flex="1">{children}</Flex>
+        <Flex flex="1" p={4}>
+          {children}
+        </Flex>
       </Flex>
     </Flex>
   );
