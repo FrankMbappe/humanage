@@ -6,6 +6,7 @@ import { BiCog, BiLogOut } from "react-icons/bi";
 import { useRouter } from "next/router";
 import { RouteEnum } from "../utils/enums";
 import Logo from "./Logo";
+import { signOut } from "next-auth/react";
 
 type ListItem = {
   icon: IconType;
@@ -66,7 +67,7 @@ const SideBar = () => {
         item={{
           name: "Log Out",
           icon: BiLogOut,
-          onClick: () => console.log("Log out"),
+          onClick: () => void signOut(),
         }}
       />
     </Flex>
