@@ -52,7 +52,7 @@ const Employees = () => {
         <title>HUMG 👻 - Employees</title>
       </Head>
 
-      <Flex direction="column" flex={1}>
+      <Flex direction="column" w="full">
         <Flex direction="column">
           <Heading>Employees</Heading>
           <Text mt={2}>
@@ -63,8 +63,8 @@ const Employees = () => {
         {isError ? (
           <Text color="red">Something went wrong</Text>
         ) : (
-          <Flex direction="column" mt={4}>
-            <Flex justify="space-between" align="center" flex={1}>
+          <Flex direction="column" mt={4} w="full">
+            <Flex justify="space-between" align="center" w="full">
               <Text fontWeight="bold">
                 {employees ? `${employees.length} record(s)` : "Loading..."}
               </Text>
@@ -82,12 +82,13 @@ const Employees = () => {
               </ButtonGroup>
             </Flex>
 
-            <TableContainer mt={4}>
+            <TableContainer w="full" mt={4} overflowX="scroll">
               <Table variant="simple">
                 <Thead>
                   <Tr>
                     <Th>Name</Th>
                     <Th>Job position</Th>
+                    <Th>Personality</Th>
                     <Th>Created</Th>
                     <Th>Actions</Th>
                   </Tr>
@@ -105,6 +106,7 @@ const Employees = () => {
                         </Flex>
                       </Td>
                       <Td>{employee.jobPosition}</Td>
+                      <Td>{employee.personality}</Td>
                       <Td>
                         {formatDistanceToNow(employee.createdAt, {
                           addSuffix: true,

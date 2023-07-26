@@ -2,7 +2,6 @@ import { Personality } from "@prisma/client";
 import { useMemo } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
-import { onlyDifferentProps } from "@/utils";
 import {
   Button,
   ButtonGroup,
@@ -59,21 +58,6 @@ const EmployeeFormModal = ({
     console.log("Data", data);
     // If we're editing, we need to update the value
     if (isEditing) {
-      const changes = onlyDifferentProps<FormData>(
-        {
-          firstName: data.firstName,
-          lastName: data.lastName,
-          jobPosition: data.jobPosition,
-          personality: data.personality,
-          picUrl: data.picUrl,
-          bio: data.bio,
-        } as FormData,
-        employee
-      );
-
-      // If there are no changes, don't submit
-      if (Object.keys(changes).length === 0) return onClose();
-
       // Update
     } else {
       // Create

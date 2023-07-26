@@ -1,4 +1,11 @@
-import { Flex, Icon, Spacer, Stack, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  type FlexProps,
+  Icon,
+  Spacer,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 import { useMemo } from "react";
 import { type IconType } from "react-icons";
 import { PiBagBold, PiUsersFourBold } from "react-icons/pi";
@@ -41,7 +48,9 @@ const Item = ({ item: { icon, name, to, onClick } }: { item: ListItem }) => {
   );
 };
 
-const SideBar = () => {
+type Props = FlexProps;
+
+const SideBar = (props: Props) => {
   const items = useMemo<ListItem[]>(
     () => [
       { name: "Employees", icon: PiUsersFourBold, to: RouteEnum.Employees },
@@ -52,7 +61,14 @@ const SideBar = () => {
   );
 
   return (
-    <Flex direction="column" bg="white" w={60} p={3} borderRightWidth={2}>
+    <Flex
+      direction="column"
+      bg="white"
+      w={60}
+      p={3}
+      borderRightWidth={2}
+      {...props}
+    >
       <Logo isSelectable />
 
       <Stack mt={6} spacing={1}>

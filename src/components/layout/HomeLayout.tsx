@@ -1,9 +1,10 @@
-import { Button, Flex, Text } from "@chakra-ui/react";
+import { Button, Flex, Hide, Show, Text } from "@chakra-ui/react";
 import SideBar from "../SideBar";
 import { type ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
 import Logo from "../Logo";
 import Head from "next/head";
+import Header from "../Header";
 
 const Login = () => {
   return (
@@ -32,10 +33,10 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex minH="100vh" justify="center">
+      <Flex w="full" minH="100vh" justify="center">
         <Flex
           maxW="container.xl"
-          flex="1"
+          w="full"
           borderWidth={2}
           borderColor="red"
           borderStyle="dashed"
@@ -44,8 +45,13 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
             <Login />
           ) : (
             <>
-              <SideBar />
-              <Flex flex="1" p={4}>
+              <Show above="lg">
+                <SideBar />
+              </Show>
+              <Flex direction="column" w="full" p={4}>
+                <Hide above="lg">
+                  <Header />
+                </Hide>
                 {children}
               </Flex>
             </>
