@@ -34,19 +34,13 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
       </Head>
 
       <Flex w="full" minH="100vh" justify="center">
-        <Flex
-          maxW="container.xl"
-          w="full"
-          borderWidth={2}
-          borderColor="red"
-          borderStyle="dashed"
-        >
+        <Flex maxW="container.xl" w="full">
           {!session ? (
             <Login />
           ) : (
             <>
               <Show above="lg">
-                <SideBar />
+                <SideBar pos="sticky" top={0} />
               </Show>
               <Flex direction="column" w="full" p={4}>
                 <Hide above="lg">
