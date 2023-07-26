@@ -21,9 +21,13 @@ import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import { FiEdit, FiDelete, FiRefreshCcw } from "react-icons/fi";
 import { api } from "@/utils/api";
 import { useSession } from "next-auth/react";
+import { type Employee } from "@prisma/client";
+import { useRouter } from "next/router";
+import { RouteEnum } from "@/utils/enums";
 
 const Employees = () => {
   const { data: sessionData } = useSession();
+  const router = useRouter();
   const {
     data: employees,
     refetch: refetchEmployees,
@@ -35,6 +39,12 @@ const Employees = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
+  const onCreateBtnClick = () => {
+    void router.push(RouteEnum.EmployeeCreate);
+  };
+  const onEditBtnClick = (employee: Employee) => {
+    void router.push(`${RouteEnum.Employees}/${employee.id}/edit`);
+  };
 
   return (
     <>
@@ -66,7 +76,9 @@ const Employees = () => {
                   isLoading={isLoading}
                   onClick={() => void refetchEmployees()}
                 />
-                <Button colorScheme="purple">New</Button>
+                <Button colorScheme="purple" onClick={onCreateBtnClick}>
+                  New
+                </Button>
               </ButtonGroup>
             </Flex>
 
@@ -81,20 +93,20 @@ const Employees = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {employees?.map((emp) => (
-                    <Tr key={emp.id}>
+                  {employees?.map((employee) => (
+                    <Tr key={employee.id}>
                       <Td>
                         <Flex align="center">
                           <Avatar
-                            src={emp.picUrl ?? undefined}
-                            name={getPersonFullName(emp)}
+                            src={employee.picUrl ?? undefined}
+                            name={getPersonFullName(employee)}
                           />
-                          <Text ms={4}>{getPersonFullName(emp)}</Text>
+                          <Text ms={4}>{getPersonFullName(employee)}</Text>
                         </Flex>
                       </Td>
-                      <Td>{emp.jobPosition}</Td>
+                      <Td>{employee.jobPosition}</Td>
                       <Td>
-                        {formatDistanceToNow(emp.createdAt, {
+                        {formatDistanceToNow(employee.createdAt, {
                           addSuffix: true,
                         })}
                       </Td>
@@ -103,6 +115,7 @@ const Employees = () => {
                           <IconButton
                             icon={<Icon as={FiEdit} />}
                             aria-label="Edit"
+                            onClick={() => onEditBtnClick(employee)}
                           />
                           <IconButton
                             icon={<Icon as={FiDelete} />}
