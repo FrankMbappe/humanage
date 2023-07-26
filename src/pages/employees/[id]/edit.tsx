@@ -11,7 +11,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import Head from "next/head";
-import { z } from "zod";
+import { type z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/router";
 import { type SubmitHandler, useForm } from "react-hook-form";
@@ -21,16 +21,9 @@ import FormSelect from "@/components/FormSelect";
 import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { getPersonFullName } from "@/utils";
+import { employeeSchema } from "@/utils/schema";
 
-const validationSchema = z.object({
-  firstName: z.string().min(1, { message: "First name is required" }),
-  lastName: z.string().min(1, { message: "Last name is required" }),
-  jobPosition: z.string().min(1, { message: "Job position is required" }),
-  picUrl: z.string().optional(),
-  bio: z.string().optional(),
-  personality: z.nativeEnum(Personality),
-});
-type FormData = z.infer<typeof validationSchema>;
+type FormData = z.infer<typeof employeeSchema>;
 
 const EmployeeEdit: NextPage = () => {
   const toast = useToast();
@@ -60,7 +53,7 @@ const EmployeeEdit: NextPage = () => {
     register,
     watch,
   } = useForm<FormData>({
-    resolver: zodResolver(validationSchema),
+    resolver: zodResolver(employeeSchema),
     defaultValues: employee
       ? {
           ...employee,
@@ -140,7 +133,7 @@ const EmployeeEdit: NextPage = () => {
                 </option>
               ))}
             </FormSelect>
-            <ButtonGroup>
+            <ButtonGroup alignSelf="flex-end">
               <Button onClick={() => router.back()} variant="ghost">
                 Cancel
               </Button>

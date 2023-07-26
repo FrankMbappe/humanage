@@ -56,6 +56,7 @@ model User {
     accounts      Account[]
     sessions      Session[]
     employees     Employee[]
+    projects      Project[]
 }
 
 model VerificationToken {
@@ -76,8 +77,22 @@ model Employee {
     picUrl      String?
     bio         String?
     personality Personality
+    projects    Project[]
     userId      String
     user        User        @relation(fields: [userId], references: [id])
+}
+
+model Project {
+    id         String     @id @default(cuid())
+    createdAt  DateTime   @default(now())
+    updatedAt  DateTime   @updatedAt
+    title      String
+    candidates Employee[]
+    teamSize   Int
+    startDate  DateTime?
+    endDate    DateTime?
+    userId     String
+    user       User       @relation(fields: [userId], references: [id])
 }
 
 enum Personality {

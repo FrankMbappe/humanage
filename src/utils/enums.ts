@@ -3,6 +3,7 @@ export enum RouteEnum {
   Employees = "/employees",
   EmployeeCreate = "/employees/create",
   Projects = "/projects",
+  ProjectCreate = "/projects/create",
   Settings = "/settings",
   Login = "/login",
 }

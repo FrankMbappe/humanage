@@ -1,4 +1,4 @@
-import { Button, Flex, Hide, Show, Text } from "@chakra-ui/react";
+import { Button, Flex, Hide, Show, Spinner, Text } from "@chakra-ui/react";
 import SideBar from "../SideBar";
 import { type ReactNode } from "react";
 import { signIn, useSession } from "next-auth/react";
@@ -23,8 +23,16 @@ const Login = () => {
   );
 };
 
+const Loading = () => {
+  return (
+    <Flex direction="column" align="center" justify="center" flex="1">
+      <Spinner size="xl" />
+    </Flex>
+  );
+};
+
 const HomeLayout = ({ children }: { children: ReactNode }) => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   return (
     <>
       <Head>
@@ -35,7 +43,9 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
 
       <Flex w="full" minH="100vh" justify="center">
         <Flex maxW="container.xl" w="full">
-          {!session ? (
+          {status === "loading" ? (
+            <Loading />
+          ) : !session ? (
             <Login />
           ) : (
             <>

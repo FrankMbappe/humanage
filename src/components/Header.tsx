@@ -39,7 +39,7 @@ const Header = () => {
           <DrawerContent>
             <DrawerCloseButton />
             <DrawerBody>
-              <SideBar p={0} w="full" borderWidth={0} />
+              <SideBar p={0} w="full" borderWidth={0} onItemClick={onClose} />
             </DrawerBody>
           </DrawerContent>
         </Drawer>

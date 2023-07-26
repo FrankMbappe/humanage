@@ -19,10 +19,15 @@ type ListItem = {
   icon: IconType;
   name: string;
   to?: RouteEnum;
-  onClick?: () => void;
 };
 
-const Item = ({ item: { icon, name, to, onClick } }: { item: ListItem }) => {
+const Item = ({
+  item: { icon, name, to },
+  onClick,
+}: {
+  item: ListItem;
+  onClick?: () => void;
+}) => {
   const router = useRouter();
   return (
     <Flex
@@ -38,7 +43,10 @@ const Item = ({ item: { icon, name, to, onClick } }: { item: ListItem }) => {
       _pressed={{
         bgColor: "gray.300",
       }}
-      onClick={to ? () => void router.push(to) : onClick}
+      onClick={() => {
+        onClick?.();
+        if (to) void router.push(to);
+      }}
     >
       <Icon as={icon} color="gray.500" boxSize={6} />
       <Text ms={4} letterSpacing={1}>
@@ -48,9 +56,11 @@ const Item = ({ item: { icon, name, to, onClick } }: { item: ListItem }) => {
   );
 };
 
-type Props = FlexProps;
+type Props = FlexProps & {
+  onItemClick?: () => void;
+};
 
-const SideBar = (props: Props) => {
+const SideBar = ({ onItemClick, ...props }: Props) => {
   const items = useMemo<ListItem[]>(
     () => [
       { name: "Employees", icon: PiUsersFourBold, to: RouteEnum.Employees },
@@ -73,7 +83,7 @@ const SideBar = (props: Props) => {
 
       <Stack mt={6} spacing={1}>
         {items.map((item) => (
-          <Item key={item.name} item={item} />
+          <Item key={item.name} item={item} onClick={onItemClick} />
         ))}
       </Stack>
 
@@ -83,7 +93,10 @@ const SideBar = (props: Props) => {
         item={{
           name: "Log Out",
           icon: BiLogOut,
-          onClick: () => void signOut(),
+        }}
+        onClick={() => {
+          onItemClick?.();
+          void signOut();
         }}
       />
     </Flex>

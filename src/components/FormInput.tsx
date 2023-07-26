@@ -6,6 +6,11 @@ import {
   Input,
   forwardRef,
   type InputProps,
+  NumberInput,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInputField,
+  NumberInputStepper,
 } from "@chakra-ui/react";
 
 type Props = InputProps & {
@@ -16,11 +21,21 @@ type Props = InputProps & {
 };
 
 const FormInput = forwardRef<Props, "input">(
-  ({ label, helperText, error, ...props }: Props, ref) => {
+  ({ label, size, helperText, error, ...props }: Props, ref) => {
     return (
       <FormControl ref={ref} isInvalid={!!error}>
         {label && <FormLabel>{label}</FormLabel>}
-        <Input {...props} />
+        {props.type === "number" ? (
+          <NumberInput>
+            <NumberInputField {...props} />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        ) : (
+          <Input size={size} {...props} />
+        )}
         {!!helperText && <FormHelperText>{helperText}</FormHelperText>}
         {!!error && <FormErrorMessage>{error}</FormErrorMessage>}
       </FormControl>

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "@/server/api/trpc";
-import { Personality } from "@prisma/client";
+import { employeeSchema } from "@/utils/schema";
 
 export const employeeRouter = createTRPCRouter({
   getOne: protectedProcedure
@@ -24,16 +24,7 @@ export const employeeRouter = createTRPCRouter({
     });
   }),
   create: protectedProcedure
-    .input(
-      z.object({
-        firstName: z.string(),
-        lastName: z.string(),
-        jobPosition: z.string(),
-        personality: z.nativeEnum(Personality),
-        picUrl: z.string().optional(),
-        bio: z.string().optional(),
-      })
-    )
+    .input(employeeSchema)
     .mutation(({ ctx, input }) => {
       return ctx.prisma.employee.create({
         data: {
@@ -49,14 +40,8 @@ export const employeeRouter = createTRPCRouter({
     }),
   update: protectedProcedure
     .input(
-      z.object({
+      employeeSchema.partial().extend({
         id: z.string(),
-        firstName: z.string().optional(),
-        lastName: z.string().optional(),
-        jobPosition: z.string().optional(),
-        personality: z.nativeEnum(Personality).optional(),
-        picUrl: z.string().optional(),
-        bio: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) => {
