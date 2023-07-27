@@ -70,7 +70,7 @@ const Projects = () => {
               </ButtonGroup>
             </Flex>
 
-            <SimpleGrid mt={4} columns={{ sm: 1, md: 3, xl: 4 }}>
+            <SimpleGrid mt={4} columns={{ sm: 1, md: 3, xl: 4 }} spacing={3}>
               {projects?.map((project) => (
                 <ProjectCard key={project.id} project={project} />
               ))}

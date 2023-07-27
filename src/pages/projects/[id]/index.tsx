@@ -13,6 +13,7 @@ import {
   IconButton,
   Icon,
   Button,
+  Avatar,
 } from "@chakra-ui/react";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
@@ -25,6 +26,7 @@ import {
   FiChevronRight,
   FiMoreHorizontal,
 } from "react-icons/fi";
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
 
 const ProjectPage = () => {
   const router = useRouter();
@@ -56,14 +58,29 @@ const ProjectPage = () => {
       <Head>
         <title>HUMG 👻 - Project</title>
       </Head>
+
       {isLoading || !project ? (
         <Flex boxSize="full" align="center" justify="center">
           <Spinner />
         </Flex>
       ) : (
-        <Flex direction="column" w="full">
+        <Flex direction="column" w="full" pt={2}>
           <SimpleGrid columns={{ md: 2 }}>
             <Stack>
+              <Flex align="center">
+                <Avatar
+                  size="lg"
+                  src="https://i.pinimg.com/1200x/b7/11/0b/b7110b476d2bae9bd4abc45eb6131778.jpg"
+                />
+                <Flex direction="column" ms={4}>
+                  <Heading size="lg">{project.title}</Heading>
+                  <Text color="gray" mt={1} fontSize="sm">
+                    {formatDistanceToNow(project.createdAt, {
+                      addSuffix: true,
+                    })}
+                  </Text>
+                </Flex>
+              </Flex>
               <p>ABC</p>
             </Stack>
 
@@ -92,7 +109,7 @@ const ProjectPage = () => {
                   />
                 </ButtonGroup>
               </Flex>
-              <Heading letterSpacing="normal" mt={6}>
+              <Heading letterSpacing="normal" mt={6} size="lg">
                 {activeComposition?.members.map((m) => m.firstName).join(", ")}
               </Heading>
               <Text mt={4}>
@@ -103,7 +120,7 @@ const ProjectPage = () => {
                 compatibility
               </Text>
               <Text mt={8} fontSize="sm" fontWeight="bold">
-                MORE COMPS ({compositions.length})
+                COMPOSITIONS ({compositions.length})
               </Text>
               <Composer
                 compositions={compositions}

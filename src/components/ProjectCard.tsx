@@ -51,10 +51,10 @@ const ProjectCard = ({ project }: Props) => {
           variant="outline"
         />
       </Flex>
-      <Text fontSize="2xl" mt={3} fontWeight="black">
+      <Text fontSize="2xl" mt={3} fontWeight="black" lineHeight="6">
         {project.title}
       </Text>
-      <Text>{project.teamSize} to be selected</Text>
+      <Text mt={2}>{project.teamSize} to be selected</Text>
       <AvatarGroup mt={4} size="md" max={3}>
         {project.candidates.map((employee) => (
           <Avatar
