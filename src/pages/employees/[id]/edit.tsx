@@ -22,6 +22,7 @@ import { type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import { getPersonFullName } from "@/utils";
 import { employeeSchema } from "@/utils/schema";
+import { useEffect, useMemo } from "react";
 
 type FormData = z.infer<typeof employeeSchema>;
 
@@ -52,16 +53,32 @@ const EmployeeEdit: NextPage = () => {
     formState: { errors, isSubmitting },
     register,
     watch,
+    reset,
   } = useForm<FormData>({
     resolver: zodResolver(employeeSchema),
-    defaultValues: employee
-      ? {
-          ...employee,
-          bio: employee.bio ?? undefined, // Optional
-          picUrl: employee.picUrl ?? undefined, // Optional
-        }
-      : undefined,
+    // See https://stackoverflow.com/a/66268317
+    defaultValues: useMemo(() => {
+      return employee
+        ? {
+            ...employee,
+            bio: employee.bio ?? undefined, // Optional
+            picUrl: employee.picUrl ?? undefined, // Optional
+          }
+        : undefined;
+    }, [employee]),
   });
+  useEffect(() => {
+    // See https://stackoverflow.com/a/66268317
+    reset(
+      employee
+        ? {
+            ...employee,
+            bio: employee.bio ?? undefined, // Optional
+            picUrl: employee.picUrl ?? undefined, // Optional
+          }
+        : undefined
+    );
+  }, [employee, reset]);
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     console.log("Data", data);

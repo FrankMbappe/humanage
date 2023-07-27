@@ -50,7 +50,7 @@ const HomeLayout = ({ children }: { children: ReactNode }) => {
           ) : (
             <>
               <Show above="lg">
-                <SideBar pos="sticky" top={0} />
+                <SideBar pos="sticky" top={0} h="100vh" />
               </Show>
               <Flex direction="column" w="full" p={4}>
                 <Hide above="lg">

@@ -26,6 +26,7 @@ const Header = () => {
       pb={3}
       borderBottomWidth={1}
       mb={2}
+      zIndex="modal"
     >
       <>
         <IconButton

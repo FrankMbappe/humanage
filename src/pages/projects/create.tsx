@@ -15,7 +15,7 @@ import { useRouter } from "next/router";
 import { type SubmitHandler, useForm } from "react-hook-form";
 import FormInput from "@/components/FormInput";
 import { projectSchema } from "@/utils/schema";
-import CandidateInput from "@/components/CandidateInput";
+import FormCandidateInput from "@/components/FormCandidateInput";
 
 type FormData = z.infer<typeof projectSchema>;
 
@@ -94,7 +94,7 @@ const ProjectCreate = () => {
               error={errors.teamSize?.message}
               {...register("teamSize", { valueAsNumber: true })}
             />
-            <CandidateInput
+            <FormCandidateInput
               label="Candidates"
               name="candidateIds"
               control={control}
