@@ -28,7 +28,9 @@ import {
 } from "react-icons/fi";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
 import CompatibilityTree from "@/components/CompatibilityTree";
+import { type Employee } from "@prisma/client";
 
+const LIMIT = 50;
 const ProjectPage = () => {
   const router = useRouter();
   const { data: sessionData } = useSession();
@@ -38,11 +40,19 @@ const ProjectPage = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
-  const compositions = useMemo<Composition[]>(
-    () =>
-      project ? getCompositions(project.candidates, project.teamSize) : [],
-    [project]
-  );
+  const [requiredCandidates, setRequiredCandidates] = useState<Employee[]>([]);
+  const compositions = useMemo<Composition[]>(() => {
+    if (!project) return [];
+    const comps = getCompositions(project.candidates, project.teamSize);
+    if (requiredCandidates.length === 0) return comps.slice(0, LIMIT);
+    return comps
+      .filter((comp) =>
+        requiredCandidates.every((candidate) =>
+          comp.members.some((member) => member.id === candidate.id)
+        )
+      )
+      .slice(0, LIMIT);
+  }, [project, requiredCandidates]);
   const [candidateIds, setCandidateIds] = useState(
     project?.candidates.map((c) => c.id)
   );
@@ -128,6 +138,20 @@ const ProjectPage = () => {
               <Text mt={8} mb={2} fontSize="sm" fontWeight="bold">
                 COMPOSITIONS ({compositions.length})
               </Text>
+              {requiredCandidates.length > 0 && (
+                <Stack direction="row" mb={2} align="center">
+                  <Text fontSize="xs" mt={2}>
+                    Required:
+                  </Text>
+                  {requiredCandidates.map((candidate) => (
+                    <Avatar
+                      size="xs"
+                      key={candidate.id}
+                      src={candidate.picUrl || undefined}
+                    />
+                  ))}
+                </Stack>
+              )}
               <Composer
                 compositions={compositions}
                 value={activeComposition}
@@ -145,6 +169,15 @@ const ProjectPage = () => {
             <CandidateInput
               inputProps={{
                 value: candidateIds,
+              }}
+              selectedCandidates={requiredCandidates}
+              onCandidateClick={(candidate) => {
+                // Toggle item
+                setRequiredCandidates((candidates) => {
+                  if (candidates.some((c) => c.id === candidate.id))
+                    return candidates.filter((c) => c.id !== candidate.id);
+                  return [candidate, ...candidates];
+                });
               }}
             />
           </Flex>

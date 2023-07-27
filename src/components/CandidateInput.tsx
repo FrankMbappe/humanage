@@ -25,6 +25,7 @@ import {
   useDisclosure,
   type WrapProps,
 } from "@chakra-ui/react";
+import { type Employee } from "@prisma/client";
 import { useSession } from "next-auth/react";
 import { FiPlus } from "react-icons/fi";
 
@@ -34,9 +35,17 @@ type Props = {
   inputProps?: CheckboxGroupProps & {
     value?: string[];
   };
+  onCandidateClick?: (candidate: Employee) => void;
+  selectedCandidates?: Employee[];
 };
 
-const CandidateInput = ({ containerProps, inputProps, addBtnProps }: Props) => {
+const CandidateInput = ({
+  containerProps,
+  inputProps,
+  addBtnProps,
+  onCandidateClick,
+  selectedCandidates,
+}: Props) => {
   // Employees
   const { data: sessionData } = useSession();
   const { data: employees } = api.employee.getAll.useQuery(
@@ -104,12 +113,27 @@ const CandidateInput = ({ containerProps, inputProps, addBtnProps }: Props) => {
         );
         return (
           candidate && (
-            <WrapItem key={candidate.id}>
+            <WrapItem
+              key={candidate.id}
+              onClick={() => onCandidateClick?.(candidate)}
+              cursor="pointer"
+              transition="150ms ease-in-out"
+              _hover={{
+                transition: "150ms ease-in-out",
+                transform: "translateY(-5%)",
+              }}
+            >
               <Stack align="center">
                 <Avatar
                   size="xl"
                   src={candidate.picUrl ?? undefined}
                   name={getPersonFullName(candidate)}
+                  {...(selectedCandidates?.some(
+                    (c) => c.id === candidate.id
+                  ) && {
+                    borderWidth: 4,
+                    borderColor: "purple.400",
+                  })}
                 />
                 <Flex direction="column">
                   <Text
