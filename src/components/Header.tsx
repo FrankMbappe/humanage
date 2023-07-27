@@ -23,7 +23,7 @@ const Header = () => {
       bg="white"
       align="center"
       justify="space-between"
-      pb={3}
+      p={3}
       borderBottomWidth={1}
       mb={2}
       zIndex="modal"

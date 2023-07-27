@@ -9,7 +9,10 @@ import { Noto_Sans } from "next/font/google";
 import "@/styles/globals.css";
 import HomeLayout from "@/components/layout/HomeLayout";
 
-const notoSans = Noto_Sans({ subsets: ["latin"], weight: "400" });
+const notoSans = Noto_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 // This whole thing is to setup layouts with Next.js
 export type NextPageWithLayout<P = object, IP = P> = NextPage<P, IP> & {

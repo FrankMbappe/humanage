@@ -20,13 +20,14 @@ import Head from "next/head";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import Composer from "@/components/Composer";
-import { formatAsPercentage } from "@/utils";
+import { formatAsPercentage, getSpectrumValue } from "@/utils";
 import {
   FiChevronLeft,
   FiChevronRight,
   FiMoreHorizontal,
 } from "react-icons/fi";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
+import CompatibilityTree from "@/components/CompatibilityTree";
 
 const ProjectPage = () => {
   const router = useRouter();
@@ -65,7 +66,7 @@ const ProjectPage = () => {
         </Flex>
       ) : (
         <Flex direction="column" w="full" pt={2}>
-          <SimpleGrid columns={{ md: 2 }}>
+          <SimpleGrid columns={{ md: 2 }} spacing={8}>
             <Stack>
               <Flex align="center">
                 <Avatar
@@ -73,7 +74,7 @@ const ProjectPage = () => {
                   src="https://i.pinimg.com/1200x/b7/11/0b/b7110b476d2bae9bd4abc45eb6131778.jpg"
                 />
                 <Flex direction="column" ms={4}>
-                  <Heading size="lg">{project.title}</Heading>
+                  <Heading fontSize="28px">{project.title}</Heading>
                   <Text color="gray" mt={1} fontSize="sm">
                     {formatDistanceToNow(project.createdAt, {
                       addSuffix: true,
@@ -81,7 +82,9 @@ const ProjectPage = () => {
                   </Text>
                 </Flex>
               </Flex>
-              <p>ABC</p>
+              {!!activeComposition && (
+                <CompatibilityTree composition={activeComposition} />
+              )}
             </Stack>
 
             <Flex direction="column">
@@ -109,17 +112,20 @@ const ProjectPage = () => {
                   />
                 </ButtonGroup>
               </Flex>
-              <Heading letterSpacing="normal" mt={6} size="lg">
+              <Heading letterSpacing="normal" mt={8} fontSize="28px">
                 {activeComposition?.members.map((m) => m.firstName).join(", ")}
               </Heading>
               <Text mt={4}>
-                ✅{" "}
+                {getSpectrumValue(
+                  (activeComposition?.compatibilityAvg ?? 0) * 100,
+                  ["😃🎉", "😊", "🙂", "🫤"]
+                )}{" "}
                 <Text as="span" fontWeight="bold">
                   {formatAsPercentage(activeComposition?.compatibilityAvg ?? 0)}
                 </Text>{" "}
                 compatibility
               </Text>
-              <Text mt={8} fontSize="sm" fontWeight="bold">
+              <Text mt={8} mb={2} fontSize="sm" fontWeight="bold">
                 COMPOSITIONS ({compositions.length})
               </Text>
               <Composer
@@ -132,8 +138,8 @@ const ProjectPage = () => {
             </Flex>
           </SimpleGrid>
 
-          <Stack w="full" spacing={3} mt={4}>
-            <Text fontSize="sm" fontWeight="bold">
+          <Flex direction="column" w="full" mt={8}>
+            <Text fontSize="sm" fontWeight="bold" mb={3}>
               CANDIDATES ({candidateIds?.length ?? "..."})
             </Text>
             <CandidateInput
@@ -141,7 +147,7 @@ const ProjectPage = () => {
                 value: candidateIds,
               }}
             />
-          </Stack>
+          </Flex>
         </Flex>
       )}
     </>

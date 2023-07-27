@@ -1,4 +1,4 @@
-import { formatAsPercentage } from "@/utils";
+import { formatAsPercentage, getSpectrumValue } from "@/utils";
 import { PERSONALITY_COMPATIBILITY } from "@/utils/res";
 import {
   Flex,
@@ -47,15 +47,8 @@ const Settings = () => {
                     {Object.values(compatibility).map((value, index) => (
                       <Td
                         key={index}
-                        color={
-                          value >= 0.75
-                            ? "blue"
-                            : value >= 0.5
-                            ? "whatsapp.500"
-                            : value >= 0.25
-                            ? "orange"
-                            : "red"
-                        }
+                        bgColor={getSpectrumValue(value * 100)}
+                        color="white"
                       >
                         {formatAsPercentage(value)}
                       </Td>

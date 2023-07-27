@@ -75,3 +75,18 @@ export function generateCombinations<T>(
   makeNextCombos([], 0, comboLength);
   return combos;
 }
+
+export function getSpectrumValue(
+  value: number,
+  spectrum: [string, string, string, string] = [
+    "blue.400",
+    "whatsapp.500",
+    "orange",
+    "red",
+  ]
+): string {
+  if (value >= 75) return spectrum[0];
+  if (value >= 50) return spectrum[1];
+  if (value >= 25) return spectrum[2];
+  return spectrum[3];
+}
