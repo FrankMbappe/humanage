@@ -15,6 +15,7 @@ import {
   Th,
   Thead,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { getPersonFullName } from "@/utils";
 import formatDistanceToNow from "date-fns/formatDistanceToNow";
@@ -24,6 +25,7 @@ import { useSession } from "next-auth/react";
 import { type Employee } from "@prisma/client";
 import { useRouter } from "next/router";
 import { RouteEnum } from "@/utils/enums";
+import EmployeeBioBtn from "@/components/EmployeeBioBtn";
 
 const Employees = () => {
   const { data: sessionData } = useSession();
@@ -39,11 +41,27 @@ const Employees = () => {
       enabled: sessionData?.user !== undefined,
     }
   );
+  const toast = useToast();
+  const deleteEmployee = api.employee.delete.useMutation({
+    onSuccess: (employee) => {
+      toast({
+        title: `Removed "${employee.firstName}"`,
+        description: "An employee was removed from the table.",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      void refetchEmployees();
+    },
+  });
   const onCreateBtnClick = () => {
     void router.push(RouteEnum.EmployeeCreate);
   };
   const onEditBtnClick = (employee: Employee) => {
     void router.push(`${RouteEnum.Employees}/${employee.id}/edit`);
+  };
+  const onDeleteBtnClick = (employee: Employee) => {
+    deleteEmployee.mutate({ id: employee.id });
   };
 
   return (
@@ -103,6 +121,7 @@ const Employees = () => {
                             name={getPersonFullName(employee)}
                           />
                           <Text ms={4}>{getPersonFullName(employee)}</Text>
+                          <EmployeeBioBtn employee={employee} ms={2} />
                         </Flex>
                       </Td>
                       <Td>{employee.jobPosition}</Td>
@@ -122,6 +141,11 @@ const Employees = () => {
                           <IconButton
                             icon={<Icon as={FiDelete} />}
                             aria-label="Delete"
+                            isLoading={
+                              deleteEmployee.isLoading &&
+                              deleteEmployee.variables?.id === employee.id
+                            }
+                            onClick={() => onDeleteBtnClick(employee)}
                           />
                         </ButtonGroup>
                       </Td>

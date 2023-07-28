@@ -18,6 +18,7 @@ import { Personality } from "@prisma/client";
 import FormInput from "@/components/FormInput";
 import FormSelect from "@/components/FormSelect";
 import { employeeSchema } from "@/utils/schema";
+import { personalityDescription } from "@/utils/res";
 
 type FormData = z.infer<typeof employeeSchema>;
 
@@ -104,7 +105,7 @@ const EmployeeCreate = () => {
             >
               {Object.values(Personality).map((p) => (
                 <option key={p} value={p}>
-                  {p}
+                  {p} ({personalityDescription[p].name})
                 </option>
               ))}
             </FormSelect>

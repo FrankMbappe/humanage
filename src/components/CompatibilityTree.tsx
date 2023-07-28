@@ -17,7 +17,7 @@ function getElementPosition(size: number, index: number): XYPosition {
       undefined, // 1
       [
         { x: 0, y: 0 },
-        { x: 0, y: 100 },
+        { x: 0, y: 200 },
       ], // 2
       [
         { x: 100, y: 0 },
@@ -26,16 +26,16 @@ function getElementPosition(size: number, index: number): XYPosition {
       ], // 3
       [
         { x: 0, y: 0 },
-        { x: 100, y: 0 },
-        { x: 0, y: 100 },
-        { x: 100, y: 100 },
+        { x: 200, y: 0 },
+        { x: 0, y: 200 },
+        { x: 200, y: 200 },
       ], // 4
       [
-        { x: 100, y: 0 },
-        { x: 0, y: 100 },
-        { x: 50, y: 200 },
-        { x: 150, y: 200 },
-        { x: 200, y: 100 },
+        { x: 200, y: 0 }, // Top
+        { x: 0, y: 125 }, // Top Left
+        { x: 400, y: 125 }, // Top Right
+        { x: 50, y: 300 }, // Bottom Left
+        { x: 350, y: 300 }, // Bottom Right
       ], // 5
     ][size]?.[index] || { x: 0, y: 0 }
   );
@@ -76,8 +76,9 @@ const CompatibilityTree = ({ composition, ...props }: Props) => {
             "#FFB800", // orange
             "#FF0808", // red
           ]),
-          strokeWidth: "0.125rem",
+          strokeWidth: "0.2rem",
         },
+        type: "straight",
       })),
     [composition]
   );
